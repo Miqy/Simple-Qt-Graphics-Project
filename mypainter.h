@@ -12,7 +12,7 @@ class MyPainter
 
 private:
     QImage *img;
-    QImage *image;
+    QImage *Mainimage;
     int szer, wys;
 
     //Kolory
@@ -28,6 +28,7 @@ public:
     void zapalPiksel(int x, int y);
     void zapalPiksel2(int x, int y);
     void zapal4Piksele(int x0, int y0, int x, int y);
+    QColor kolorPiksela(int x, int y);
     void odcinek(int x0, int y0,int x1, int y1);
     void okrag(int x0,int y0, int x1, int y1);
     void elipsa(int x0, int y0, int x1,int y1);

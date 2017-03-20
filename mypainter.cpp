@@ -10,7 +10,7 @@ MyPainter::MyPainter()
 MyPainter::MyPainter(QImage *image, QImage *image2, int w, int s)
 {
     img = image;
-    this->image = image2;
+    this->Mainimage = image2;
     szer = s;
     wys = w;
     red = green = blue = 0;
@@ -78,10 +78,11 @@ void MyPainter::zapalPiksel2(int x, int y)
 {
     if(x > 0 && y > 0 && x < szer && y < wys){
         unsigned char *ptr;
-        ptr = image->bits();
+        ptr = Mainimage->bits();
         ptr[szer*4*y + 4*x] = blue;
         ptr[szer*4*y + 4*x + 1] = green;
         ptr[szer*4*y + 4*x + 2] = red;
+
     }
 }
 
@@ -92,8 +93,17 @@ void MyPainter::zapal4Piksele(int x0, int y0, int x, int y)
     zapalPiksel(x0-x,y0+y);
     zapalPiksel(x0-x,y0-y);
 
+}
 
+QColor MyPainter::kolorPiksela(int x, int y)
+{
+    QColor Kol;
+    unsigned char *ptr = Mainimage->bits();
+    Kol.setBlue(ptr[szer*4*y + 4*x]);
+    Kol.setGreen(ptr[szer*4*y + 4*x + 1]);
+    Kol.setRed(ptr[szer*4*y + 4*x + 2]);
 
+    return Kol;
 }
 
 void MyPainter::odcinek(int x0, int y0, int x1, int y1)
@@ -286,11 +296,14 @@ void MyPainter::krzywaBSpline(QPoint p0, QPoint p1, QPoint p2, QPoint p3)
 
 void MyPainter::floodFil(int x, int y, QColor zamien)
 {
-    unsigned char* ptr = image->bits();
+
     QColor Kol;
     QPoint p;
-
     std::stack<QPoint> stos;
+    int w = 0;
+    int e = 0;
+
+
     stos.push(QPoint(x,y));
     while(!stos.empty()){
         p = stos.top();
@@ -298,18 +311,22 @@ void MyPainter::floodFil(int x, int y, QColor zamien)
         int x,y;
         x = p.x();
         y = p.y();
-        if(x < 0 || x > szer-1 || y < 0 || y > wys-1) continue;
-        Kol.setBlue(ptr[szer*4*y + 4*x]);
-        Kol.setGreen(ptr[szer*4*y + 4*x + 1]);
-        Kol.setRed(ptr[szer*4*y + 4*x + 2]);
-        Kol.setAlpha(255);
+        if(x < 1 || x > szer-1 || y < 1 || y > wys-1){
+            continue;
+        }
+        Kol = kolorPiksela(x,y);
 
         if (Kol == zamien){
-           zapalPiksel2(x, y);
-           stos.push(QPoint(p.x()-1,p.y()));
-           stos.push(QPoint(p.x()+1,p.y()));
-           stos.push(QPoint(p.x(),p.y()-1));
-           stos.push(QPoint(p.x(),p.y()+1));
+           w = x;
+           e = x;
+           while(kolorPiksela(w,y) == zamien) w--;
+           while(kolorPiksela(e,y) == zamien) e++;
+           for(int i = w + 1; i < e; i++){
+               zapalPiksel2(i, y);
+               if(kolorPiksela(i,y+1) == zamien) stos.push(QPoint(i,y+1));
+               if(kolorPiksela(i,y-1) == zamien) stos.push(QPoint(i,y-1));
+            }
+
         }
     }
     return;

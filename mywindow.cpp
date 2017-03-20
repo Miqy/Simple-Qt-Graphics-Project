@@ -304,7 +304,6 @@ void MyWindow::mousePressEvent(QMouseEvent *event)
             zamieniany.setBlue(ptr[szer*4*y + 4*x]);
             zamieniany.setGreen(ptr[szer*4*y + 4*x + 1]);
             zamieniany.setRed(ptr[szer*4*y + 4*x + 2]);
-            zamieniany.setAlpha(255);
             rysownik.floodFil(x,y,zamieniany);
         }
     }
