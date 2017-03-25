@@ -8,6 +8,7 @@
 
 #include <iostream>
 #include <vector>
+#include <cmath>
 
 #include <QMainWindow>
 #include <QPainter>
@@ -50,12 +51,12 @@ private:
     MyPainter rysownik;
 
     // Pole przechowujace obrazek
-    QImage *img;
-    QImage *tmpImg;
+    QImage *MainImage;
+    QImage *TmpImg;
 
     //Rodzaj aktualnego narzedzia do rysowania
-    int tool;
-
+    //zmienne pomocnicze do obslugi roznych narzedzi
+    enum tool{LINE = 0, CIRCLE, ELLIPSE, POLYGON, BEZIERCURVE, BSPLINECURVE, FLOODFILL} tool;
     //zmienna przechowujaca ilosc wierzcholkow potrzebna do narysowania wielokata
     int iloscWierzcholkow;
 
@@ -65,10 +66,9 @@ private:
     // oraz wspolrzedne jego lewego gornego naroznika
     int poczX;
     int poczY;
-    //pola przechowujaca poczatek odcinka przy pierwszym naicsnieciu muszy (OnMousePress)
+    //pola przechowujace poczatek odcinka przy pierwszym naicsnieciu muszy (OnMousePress)
     int odcX;
     int odcY;
-    int iloscPkt;
     std::vector<QPoint> punkty;
     int PrzesuwanyPkt;
     int UsuwanyPkt;

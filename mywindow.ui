@@ -39,64 +39,26 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>630</x>
+      <x>610</x>
       <y>10</y>
-      <width>241</width>
+      <width>261</width>
       <height>251</height>
      </rect>
+    </property>
+    <property name="acceptDrops">
+     <bool>false</bool>
     </property>
     <property name="title">
      <string>Rysowanie:</string>
     </property>
     <property name="alignment">
-     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
     </property>
-    <widget class="QPushButton" name="Odcinek">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>45</y>
-       <width>61</width>
-       <height>41</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Odcinek</string>
-     </property>
-     <property name="checkable">
-      <bool>true</bool>
-     </property>
-     <property name="checked">
-      <bool>true</bool>
-     </property>
-     <property name="autoExclusive">
-      <bool>true</bool>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="Okrag">
-     <property name="geometry">
-      <rect>
-       <x>90</x>
-       <y>45</y>
-       <width>61</width>
-       <height>41</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Okrag</string>
-     </property>
-     <property name="checkable">
-      <bool>true</bool>
-     </property>
-     <property name="autoExclusive">
-      <bool>true</bool>
-     </property>
-    </widget>
     <widget class="QLabel" name="Tool">
      <property name="geometry">
       <rect>
        <x>80</x>
-       <y>10</y>
+       <y>0</y>
        <width>71</width>
        <height>21</height>
       </rect>
@@ -111,127 +73,195 @@
       <string>Odcinek</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="Elipsa">
+    <widget class="QWidget" name="gridLayoutWidget">
      <property name="geometry">
       <rect>
-       <x>90</x>
-       <y>100</y>
-       <width>61</width>
-       <height>41</height>
+       <x>10</x>
+       <y>26</y>
+       <width>181</width>
+       <height>241</height>
       </rect>
      </property>
-     <property name="text">
-      <string>Elipsa</string>
-     </property>
-     <property name="checkable">
-      <bool>true</bool>
-     </property>
-     <property name="checked">
-      <bool>false</bool>
-     </property>
-     <property name="autoExclusive">
-      <bool>true</bool>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="Wielokat">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>100</y>
-       <width>61</width>
-       <height>41</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Wielokat</string>
-     </property>
-     <property name="checkable">
-      <bool>true</bool>
-     </property>
-     <property name="checked">
-      <bool>false</bool>
-     </property>
-     <property name="autoRepeat">
-      <bool>true</bool>
-     </property>
-     <property name="autoExclusive">
-      <bool>true</bool>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="Krzywe">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>150</y>
-       <width>61</width>
-       <height>41</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Krzywe</string>
-     </property>
-     <property name="checkable">
-      <bool>true</bool>
-     </property>
-     <property name="checked">
-      <bool>false</bool>
-     </property>
-     <property name="autoRepeat">
-      <bool>true</bool>
-     </property>
-     <property name="autoExclusive">
-      <bool>true</bool>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="Krzywe2">
-     <property name="geometry">
-      <rect>
-       <x>90</x>
-       <y>150</y>
-       <width>61</width>
-       <height>41</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Krzywe2</string>
-     </property>
-     <property name="checkable">
-      <bool>true</bool>
-     </property>
-     <property name="checked">
-      <bool>false</bool>
-     </property>
-     <property name="autoRepeat">
-      <bool>true</bool>
-     </property>
-     <property name="autoExclusive">
-      <bool>true</bool>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="Malowanie">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>200</y>
-       <width>61</width>
-       <height>41</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Malowanie</string>
-     </property>
-     <property name="checkable">
-      <bool>true</bool>
-     </property>
-     <property name="checked">
-      <bool>false</bool>
-     </property>
-     <property name="autoRepeat">
-      <bool>true</bool>
-     </property>
-     <property name="autoExclusive">
-      <bool>true</bool>
-     </property>
+     <layout class="QGridLayout" name="Grid" rowstretch="0,0,0,0,0,0,0,0,0,0,0" columnstretch="0,0,0" rowminimumheight="0,0,0,0,0,0,0,0,0,0,0">
+      <property name="sizeConstraint">
+       <enum>QLayout::SetMinimumSize</enum>
+      </property>
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>3</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="spacing">
+       <number>0</number>
+      </property>
+      <item row="9" column="0">
+       <widget class="QPushButton" name="Malowanie">
+        <property name="maximumSize">
+         <size>
+          <width>55</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>FloodFill</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <property name="checked">
+         <bool>false</bool>
+        </property>
+        <property name="autoRepeat">
+         <bool>true</bool>
+        </property>
+        <property name="autoExclusive">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QPushButton" name="Odcinek">
+        <property name="maximumSize">
+         <size>
+          <width>55</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>Odcinek</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+        <property name="autoExclusive">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QPushButton" name="Krzywe">
+        <property name="maximumSize">
+         <size>
+          <width>55</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>Bezier</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <property name="checked">
+         <bool>false</bool>
+        </property>
+        <property name="autoRepeat">
+         <bool>true</bool>
+        </property>
+        <property name="autoExclusive">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QPushButton" name="Okrag">
+        <property name="maximumSize">
+         <size>
+          <width>55</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>Okrag</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <property name="autoExclusive">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QPushButton" name="Elipsa">
+        <property name="maximumSize">
+         <size>
+          <width>55</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>Elipsa</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <property name="checked">
+         <bool>false</bool>
+        </property>
+        <property name="autoExclusive">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="2">
+       <widget class="QPushButton" name="Wielokat">
+        <property name="maximumSize">
+         <size>
+          <width>55</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>Wielokat</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <property name="checked">
+         <bool>false</bool>
+        </property>
+        <property name="autoRepeat">
+         <bool>true</bool>
+        </property>
+        <property name="autoExclusive">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1">
+       <widget class="QPushButton" name="Krzywe2">
+        <property name="maximumSize">
+         <size>
+          <width>55</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>Bspline</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <property name="checked">
+         <bool>false</bool>
+        </property>
+        <property name="autoRepeat">
+         <bool>true</bool>
+        </property>
+        <property name="autoExclusive">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </widget>
    </widget>
    <widget class="QPushButton" name="exitButton">
@@ -267,7 +297,7 @@
     <property name="geometry">
      <rect>
       <x>610</x>
-      <y>340</y>
+      <y>330</y>
       <width>191</width>
       <height>61</height>
      </rect>
@@ -444,7 +474,7 @@
     <property name="geometry">
      <rect>
       <x>620</x>
-      <y>270</y>
+      <y>260</y>
       <width>151</width>
       <height>71</height>
      </rect>
@@ -489,7 +519,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>21</height>
+     <height>27</height>
     </rect>
    </property>
   </widget>

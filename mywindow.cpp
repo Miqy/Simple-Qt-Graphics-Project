@@ -1,6 +1,6 @@
 // Dolaczamy plik naglowkowy naszej klasy MyWindow
 #include "mywindow.h"
-#include <cmath>
+
 
 // Dolaczamy plik naglowkowy zawierajacy definicje GUI
 // Plik ten jest generowany automatycznie
@@ -28,8 +28,7 @@ MyWindow::MyWindow(QWidget *parent) :
     poczX = ui->rysujFrame->x();
     poczY = ui->rysujFrame->y();
     //zerowanie pol
-    tool = 0;
-    iloscPkt = 0;
+    tool = LINE;
     iloscWierzcholkow = 3;
     odcX = 0;
     odcY = 0;
@@ -41,15 +40,15 @@ MyWindow::MyWindow(QWidget *parent) :
     // Tworzymy obiekt klasy QImage, o odpowiedniej szerokosci
     // i wysokosci. Ustawiamy format bitmapy na 32 bitowe RGB
     // (0xffRRGGBB).
-    img = new QImage(szer,wys,QImage::Format_RGB32);
-    tmpImg = new QImage(szer,wys,QImage::Format_ARGB32);
+    MainImage = new QImage(szer,wys,QImage::Format_RGB32);
+    TmpImg = new QImage(szer,wys,QImage::Format_ARGB32);
 
     //incijalizacja rysownika ktory rysuje
-    rysownik = MyPainter(tmpImg, img,szer,wys);
+    rysownik = MyPainter(TmpImg, MainImage,szer,wys);
 
     //Czyszczenie na poczatku okna do rysowania(zmiana na kolor bialy)
-    rysownik.czysc(img, false);
-    rysownik.czysc(tmpImg, true);
+    rysownik.czysc(MainImage, false);
+    rysownik.czysc(TmpImg, true);
 
     //definicja polaczen sygnalow ze slotami z narzedziami
     connect(ui->Odcinek,SIGNAL(clicked()),this,SLOT(setOdcinekTool()));
@@ -78,16 +77,6 @@ MyWindow::~MyWindow()
     delete ui;
 }
 
-
-
-
-
-// Funkcja (slot) wywolywana po nacisnieciu przycisku "Wyjscie" (exitButton)
-// Uwaga: polaczenie tej funkcji z sygnalem "clicked"
-// emitowanym przez przycisk jest realizowane
-// za pomoca funkcji QMetaObject::connectSlotsByName(MyWindow)
-// znajdujacej sie w automatycznie generowanym pliku "ui_mywindow.h"
-// Nie musimy wiec sami wywolywac funkcji "connect"
 void MyWindow::on_exitButton_clicked()
 {
     // qApp to globalny wskaznik do obiektu reprezentujacego aplikacje
@@ -104,13 +93,12 @@ void MyWindow::paintEvent(QPaintEvent*)
 
     // Rysuje obrazek "img" w punkcie (poczX,poczY)
     // (tu bedzie lewy gorny naroznik)
-    p.drawImage(poczX,poczY,*img);
-    p.drawImage(poczX,poczY,*tmpImg);
+    p.drawImage(poczX,poczY,*MainImage);
+    p.drawImage(poczX,poczY,*TmpImg);
     QImage *img = new QImage(8,8,QImage::Format_RGB32);
-    img->fill(QColor(255,0,0));
+    img->fill(QColor(200,100,5));
     if(WyswietlPkty){
         for(int i = 0; i < punkty.size(); i++){
-            // p.drawImage(punkty[i].x(),punkty[i].y(),QImage(8,8,QImage::Format_RGB32));
             p.drawImage(punkty[i].x(),punkty[i].y(),*img);
         }
     }
@@ -118,44 +106,44 @@ void MyWindow::paintEvent(QPaintEvent*)
 
 void MyWindow::setOdcinekTool()
 {
-    tool = 0;
+    tool = LINE;
     ui->Tool->setText(QString("Odcinek"));
 }
 
 void MyWindow::setOkragTool()
 {
-    tool = 1;
+    tool = CIRCLE;
     ui->Tool->setText(QString("Okrag"));
 }
 
 void MyWindow::setElipsaTool()
 {
-    tool = 2;
+    tool = ELLIPSE;
     ui->Tool->setText(QString("Elipsa"));
 }
 
 void MyWindow::setWielokatTool()
 {
-    tool = 3;
+    tool = POLYGON;
     ui->Tool->setText(QString("Wielokat"));
 }
 
 
 void MyWindow::setKrzyweTool()
 {
-    tool = 4;
+    tool = BEZIERCURVE;
     ui->Tool->setText(QString("Krzywe"));
 }
 
 void MyWindow::setKrzywe2Tool()
 {
-    tool = 5;
+    tool = BSPLINECURVE;
     ui->Tool->setText(QString("BSpline"));
 }
 
 void MyWindow::setMalowanie()
 {
-    tool = 6;
+    tool = FLOODFILL;
     ui->Tool->setText(QString("Malowanie"));
 }
 
@@ -185,22 +173,22 @@ void MyWindow::setWyswietlPkty(bool value)
     update();
 }
 
+//funkcja usuwajaca ostatnio wybrany punkt
 void MyWindow::usunPkt()
 {
     if(UsuwanyPkt == -1) return;
     punkty.erase(punkty.begin() + UsuwanyPkt);
     UsuwanyPkt = -1;
-    iloscPkt--;
-    rysownik.czysc(img,false);
+    rysownik.czysc(MainImage,false);
     if(tool == 4){
-        if(iloscPkt >= 4){
-            for(int i = 3; i < iloscPkt; i+= 3){
+        if(punkty.size() >= 4){
+            for(int i = 3; i < punkty.size(); i+= 3){
                 rysownik.krzywaBeziera(punkty[i-3],punkty[i-2],punkty[i-1],punkty[i]);
             }
         }
     }else if(tool == 5){
-        if(iloscPkt >= 4){
-            for(int i = 3; i < iloscPkt; i++){
+        if(punkty.size() >= 4){
+            for(int i = 3; i < punkty.size(); i++){
                 rysownik.krzywaBSpline(punkty[i-3],punkty[i-2],punkty[i-1],punkty[i]);
             }
         }
@@ -214,10 +202,9 @@ void MyWindow::on_cleanButton_clicked()
 {
     // Funkcja czysci (zamalowuje na bialo) obszar rysowania
     // definicja znajduje sie ponizej
-    rysownik.czysc(img,false);
-    rysownik.czysc(tmpImg, true);
+    rysownik.czysc(MainImage,false);
+    rysownik.czysc(TmpImg, true);
     punkty.resize(0);
-    iloscPkt = 0;
     PrzesuwanyPkt = -1;
     UsuwanyPkt = -1;
 
@@ -236,7 +223,7 @@ void MyWindow::mousePressEvent(QMouseEvent *event)
 
     // Sa to wspolrzedne wzgledem glownego okna,
     // Musimy odjac od nich wpolrzedne lewego gornego naroznika rysunku
-    if(tool !=4 && event->buttons() == Qt::LeftButton){
+    if(tool != BEZIERCURVE && event->buttons() == Qt::LeftButton){
         x -= poczX;
         y -= poczY;
         if ((x>=0)&&(y>=0)&&(x<szer)&&(y<wys)){
@@ -248,12 +235,7 @@ void MyWindow::mousePressEvent(QMouseEvent *event)
         }
     }
 
-
-
-
-
-    // Sprawdzamy ktory przycisk myszy zostal klkniety
-    if(tool == 4){
+    if(tool == BEZIERCURVE){
         if(event->buttons() == Qt::LeftButton){
             for(int i = 0; i < punkty.size(); i++){
                 if(abs(x - punkty[i].x()) < 8 && abs(y - punkty[i].y()) < 8){
@@ -267,15 +249,14 @@ void MyWindow::mousePressEvent(QMouseEvent *event)
             if((x>=0)&&(y>=0)&&(x<szer)&&(y<wys)){
 
                 punkty.push_back(QPoint(x,y));
-                iloscPkt++;
 
-                if( ((punkty.size() == 4) || ((punkty.size() > 3) && ((iloscPkt-1) % 3 == 0)))){
-                    punkty[iloscPkt - 1] = QPoint(x,y);
-                    rysownik.krzywaBeziera(punkty[iloscPkt-4],punkty[iloscPkt-3],punkty[iloscPkt-2],punkty[iloscPkt-1]);
+                if( ((punkty.size() == 4) || ((punkty.size() > 3) && ((punkty.size()-1) % 3 == 0)))){
+                    punkty[punkty.size() - 1] = QPoint(x,y);
+                    rysownik.krzywaBeziera(punkty[punkty.size()-4],punkty[punkty.size()-3],punkty[punkty.size()-2],punkty[punkty.size()-1]);
                 }
             }
         }
-    }else if(tool == 5){
+    }else if(tool == BSPLINECURVE){
         if(event->buttons() == Qt::LeftButton){
             for(int i = 0; i < punkty.size(); i++){
                 if(abs(x - punkty[i].x()) < 8 && abs(y - punkty[i].y()) < 8){
@@ -289,17 +270,16 @@ void MyWindow::mousePressEvent(QMouseEvent *event)
             if((x>=0)&&(y>=0)&&(x<szer)&&(y<wys)){
 
                 punkty.push_back(QPoint(x,y));
-                iloscPkt++;
 
                 if(punkty.size() >= 4){
-                    punkty[iloscPkt - 1] = QPoint(x,y);
-                    rysownik.krzywaBSpline(punkty[iloscPkt-4],punkty[iloscPkt-3],punkty[iloscPkt-2],punkty[iloscPkt-1]);
+                    punkty[punkty.size() - 1] = QPoint(x,y);
+                    rysownik.krzywaBSpline(punkty[punkty.size()-4],punkty[punkty.size()-3],punkty[punkty.size()-2],punkty[punkty.size()-1]);
                 }
             }
         }
-    }else if(tool == 6){
+    }else if(tool == FLOODFILL){
         if((x>=0)&&(y>=0)&&(x<szer)&&(y<wys)){
-            unsigned char* ptr = img->bits();
+            unsigned char* ptr = MainImage->bits();
             QColor zamieniany;
             zamieniany.setBlue(ptr[szer*4*y + 4*x]);
             zamieniany.setGreen(ptr[szer*4*y + 4*x + 1]);
@@ -329,45 +309,45 @@ void MyWindow::mouseMoveEvent(QMouseEvent *event)
     //Definicja wszystkich narzedzi
     if ((x>=0)&&(y>=0)&&(x<szer)&&(y<wys))
     {
-        rysownik.czysc(tmpImg, true);
-        if(tool == 0){
+        rysownik.czysc(TmpImg, true);
+        if(tool == LINE){
             rysownik.odcinek(odcX, odcY, x, y);
-        }else if(tool == 1){
+        }else if(tool == CIRCLE){
             rysownik.okrag(odcX,odcY,x,y);
-        }else if(tool == 2){
+        }else if(tool == ELLIPSE){
             rysownik.elipsa(odcX,odcY,x,y);
-        }else if(tool == 3){
+        }else if(tool == POLYGON){
             rysownik.wielokat(iloscWierzcholkow,odcX,odcY,x,y);
-        }else if(tool == 4){    //Bardzo rozbudowane narzedzie do rysowania krzywych Beziera
+        }else if(tool == BEZIERCURVE){    //Bardzo rozbudowane narzedzie do rysowania krzywych Beziera
             if(event->buttons() == Qt::LeftButton){
                 if(punkty.size() >= 4){
                     //odtwarzanie krzywej Beziera po przesunieciu pktu
                     if(PrzesuwanyPkt != -1){
                         punkty[PrzesuwanyPkt] = QPoint(x,y);
-                        rysownik.czysc(img,false);
-                        if(iloscPkt >= 4){
-                            for(int i = 3; i < iloscPkt; i+= 3){
+                        rysownik.czysc(MainImage,false);
+                        if(punkty.size() >= 4){
+                            for(int i = 3; i < punkty.size(); i+= 3){
                                 rysownik.krzywaBeziera(punkty[i-3],punkty[i-2],punkty[i-1],punkty[i]);
                             }
                         }
                     }
                 }
             }else{
-                if(((punkty.size() == 4) || ((punkty.size() > 3) && ((iloscPkt-1) % 3 == 0)))){
-                    punkty[iloscPkt - 1] = QPoint(x,y);
-                    rysownik.krzywaBeziera(punkty[iloscPkt-4],punkty[iloscPkt-3],punkty[iloscPkt-2],punkty[iloscPkt-1]);
+                if(((punkty.size() == 4) || ((punkty.size() > 3) && ((punkty.size()-1) % 3 == 0)))){
+                    punkty[punkty.size() - 1] = QPoint(x,y);
+                    rysownik.krzywaBeziera(punkty[punkty.size()-4],punkty[punkty.size()-3],punkty[punkty.size()-2],punkty[punkty.size()-1]);
                 }
             }
 
-        }else if(tool == 5){
+        }else if(tool == BSPLINECURVE){
             if(event->buttons() == Qt::LeftButton){
                 if(punkty.size() >= 4){
                     //odtwarzanie krzywej Bspline po przesunieciu pktu
                     if(PrzesuwanyPkt != -1){
                         punkty[PrzesuwanyPkt] = QPoint(x,y);
-                        rysownik.czysc(img,false);
-                        if(iloscPkt >= 4){
-                            for(int i = 3; i < iloscPkt; i++){
+                        rysownik.czysc(MainImage,false);
+                        if(punkty.size() >= 4){
+                            for(int i = 3; i < punkty.size(); i++){
                                 rysownik.krzywaBSpline(punkty[i-3],punkty[i-2],punkty[i-1],punkty[i]);
                             }
                         }
@@ -375,8 +355,8 @@ void MyWindow::mouseMoveEvent(QMouseEvent *event)
                 }
             }else{
                 if(punkty.size() >= 4){
-                    punkty[iloscPkt - 1] = QPoint(x,y);
-                    rysownik.krzywaBSpline(punkty[iloscPkt-4],punkty[iloscPkt-3],punkty[iloscPkt-2],punkty[iloscPkt-1]);
+                    punkty[punkty.size() - 1] = QPoint(x,y);
+                    rysownik.krzywaBSpline(punkty[punkty.size()-4],punkty[punkty.size()-3],punkty[punkty.size()-2],punkty[punkty.size()-1]);
                 }
             }
         }
@@ -407,14 +387,14 @@ void MyWindow::mouseReleaseEvent(QMouseEvent *event)
     {
 
 
-        //Doklejanie tymczasowego odcinka z tmpImg na glowny obraz img
-        QPainter painter(img);
+        //Doklejanie tymczasowego obrazu z tmpImg na glowny obraz MainImage
+        QPainter painter(MainImage);
         QRectF target(0.0, 0.0, szer, wys);
         QRectF source(0.0, 0.0, szer, wys);
-        painter.drawImage(target, *tmpImg, source);
-        rysownik.czysc(tmpImg, true);
-
+        painter.drawImage(target, *TmpImg, source);
+        rysownik.czysc(TmpImg, true);
     }
+    //ustawianie przesuwanego pktu na zaden z punktow
     PrzesuwanyPkt = -1;
 
     // Odswiezamy komponent

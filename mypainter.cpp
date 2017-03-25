@@ -1,6 +1,5 @@
 #include "mypainter.h"
-#include <iostream>
-#include <algorithm>
+
 
 MyPainter::MyPainter()
 {
@@ -9,8 +8,8 @@ MyPainter::MyPainter()
 
 MyPainter::MyPainter(QImage *image, QImage *image2, int w, int s)
 {
-    img = image;
-    this->Mainimage = image2;
+    TmpImg = image;
+    this->MainImage = image2;
     szer = s;
     wys = w;
     red = green = blue = 0;
@@ -66,7 +65,7 @@ void MyPainter::zapalPiksel(int x, int y)
 {
     if(x > 0 && y > 0 && x < szer && y < wys){
         unsigned char *ptr;
-        ptr = img->bits();
+        ptr = TmpImg->bits();
         ptr[szer*4*y + 4*x] = blue;
         ptr[szer*4*y + 4*x + 1] = green;
         ptr[szer*4*y + 4*x + 2] = red;
@@ -78,7 +77,7 @@ void MyPainter::zapalPiksel2(int x, int y)
 {
     if(x > 0 && y > 0 && x < szer && y < wys){
         unsigned char *ptr;
-        ptr = Mainimage->bits();
+        ptr = MainImage->bits();
         ptr[szer*4*y + 4*x] = blue;
         ptr[szer*4*y + 4*x + 1] = green;
         ptr[szer*4*y + 4*x + 2] = red;
@@ -98,7 +97,7 @@ void MyPainter::zapal4Piksele(int x0, int y0, int x, int y)
 QColor MyPainter::kolorPiksela(int x, int y)
 {
     QColor Kol;
-    unsigned char *ptr = Mainimage->bits();
+    unsigned char *ptr = MainImage->bits();
     Kol.setBlue(ptr[szer*4*y + 4*x]);
     Kol.setGreen(ptr[szer*4*y + 4*x + 1]);
     Kol.setRed(ptr[szer*4*y + 4*x + 2]);

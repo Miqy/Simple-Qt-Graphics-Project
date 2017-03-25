@@ -4,15 +4,18 @@
 
 #include <QImage>
 #include <QColor>
+
 #include <cmath>
 #include <stack>
+#include <iostream>
+#include <algorithm>
 
 class MyPainter
 {
 
 private:
-    QImage *img;
-    QImage *Mainimage;
+    QImage *TmpImg;
+    QImage *MainImage;
     int szer, wys;
 
     //Kolory
